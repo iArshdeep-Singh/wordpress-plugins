@@ -4,8 +4,11 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$sk = "";
+if ($_SERVER['REQUEST_METHOD'])
 
+
+
+$sk = "";
 $url = "";
 
 $ch = curl_init();
