@@ -3,6 +3,7 @@
 $data = json_decode(file_get_contents("php://input"), true);
 
 $amount = $data['amount'];
+$currency = $data['currency'];
 
 $env = parse_ini_file(__DIR__ . '/.env');
 $sk = $env['SK'];
@@ -10,7 +11,7 @@ $url = "https://api.stripe.com/v1/payment_intents";
 
 $body = [
     'amount' => $amount,
-    'currency' => "usd",
+    'currency' => $currency,
     // 'automatic_payment_methods[enabled]' => 'true',
     'payment_method_types' => ['card'] // show only card
 ];

@@ -3,11 +3,49 @@
   margin: 40px auto;
   padding: 32px;
   background: #ffffff;
-  border: 1px solid #e0e0e5;
-  border-radius: 18px;
+  border: 1px solid #e5e5ea;
+  border-radius: 20px;
   font-family:
     -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
     sans-serif;
+  color: #1d1d1f;
+}
+
+.stripe-payment-wrap label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: #6e6e73;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.stripe-payment-wrap select#currency {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-family: inherit;
+  color: #1d1d1f;
+  border: 1px solid #e5e5ea;
+  border-radius: 12px;
+  background: #fafafa;
+  outline: none;
+  margin-bottom: 16px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236e6e73' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 18px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.stripe-payment-wrap select#currency:focus {
+  border-color: #1d1d1f;
+  background-color: #fff;
 }
 
 .stripe-payment-wrap #amount {
@@ -15,18 +53,20 @@
   box-sizing: border-box;
   padding: 14px 16px;
   font-size: 16px;
-  border: 1px solid #e0e0e5;
+  font-family: inherit;
+  color: #1d1d1f;
+  border: 1px solid #e5e5ea;
   border-radius: 12px;
   outline: none;
   margin-bottom: 16px;
+  background: #fafafa;
   transition:
     border-color 0.2s ease,
-    background 0.2s ease;
-  background: #fafafa;
+    background-color 0.2s ease;
 }
 
 .stripe-payment-wrap #amount:focus {
-  border-color: #000;
+  border-color: #1d1d1f;
   background: #fff;
 }
 
@@ -38,14 +78,16 @@
   width: 100%;
   padding: 14px 16px;
   font-size: 16px;
+  font-family: inherit;
   font-weight: 600;
+  letter-spacing: -0.01em;
   border: none;
   border-radius: 12px;
   cursor: pointer;
   transition:
     transform 0.08s ease,
     opacity 0.2s ease,
-    background 0.2s ease;
+    background-color 0.2s ease;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -53,39 +95,100 @@
   transform: scale(0.98);
 }
 
-/* Primary black "Apple Pay" style button */
+.stripe-payment-wrap button:focus-visible {
+  outline: 2px solid #0071e3;
+  outline-offset: 2px;
+}
+
+/* Primary black button, Apple Pay style */
 .stripe-payment-wrap #load-payment,
 .stripe-payment-wrap #payment-button {
-  background: #000;
+  background: #1d1d1f;
   color: #fff;
   margin-bottom: 12px;
 }
 
 .stripe-payment-wrap #load-payment:hover,
 .stripe-payment-wrap #payment-button:hover {
-  background: #1a1a1a;
+  background: #000;
 }
 
 .stripe-payment-wrap #load-payment:disabled,
 .stripe-payment-wrap #payment-button:disabled {
-  background: #d0d0d5;
-  color: #8a8a8e;
+  background: #e5e5ea;
+  color: #9a9a9e;
   cursor: not-allowed;
   transform: none;
 }
 
-.stripe-payment-wrap #payment-element {
-  margin: 16px 0;
+/* Secondary, quiet cancel button */
+.stripe-payment-wrap #cancel-button {
+  background: #f5f5f7;
+  color: #1d1d1f;
+  border: 1px solid #e5e5ea;
 }
 
-.stripe-payment-wrap #message {
+.stripe-payment-wrap #cancel-button:hover {
+  background: #ececee;
+}
+
+.stripe-payment-wrap #payment-element {
+  margin: 20px 0;
+  /* padding: 16px; */
+  /* border: 1px solid #e5e5ea; */
+  border-radius: 12px;
+  /* background: #fafafa; */
+}
+
+.stripe-payment-wrap #error-message {
   text-align: center;
   font-size: 14px;
-  color: #d0021b;
+  color: #d70015;
   margin-top: 12px;
   min-height: 18px;
 }
 
-.stripe-payment-wrap #message.success {
-  color: #1a7f37;
+.stripe-payment-wrap #error-message.success {
+  color: #248a3d;
+}
+
+.stripe-payment-wrap #success-message {
+  text-align: center;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d7a3c;
+  margin: 16px 0 4px;
+  letter-spacing: -0.01em;
+}
+
+#submitted-amount {
+  display: flex;
+  align-items: flex-start;
+  justify-content: left;
+  font-family: inherit;
+  margin-bottom: 8px;
+}
+
+.symbol {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 8px;
+  margin-right: 2px;
+  color: #6e6e73;
+}
+
+.whole {
+  font-size: 52px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: #1d1d1f;
+}
+
+.cents {
+  font-size: 22px;
+  font-weight: 500;
+  margin-top: 8px;
+  line-height: 1;
+  color: #6e6e73;
 }

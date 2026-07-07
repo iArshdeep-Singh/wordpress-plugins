@@ -52,8 +52,15 @@ function plugin_scripts()
 add_action('wp_enqueue_scripts', 'plugin_scripts');
 
 
-function stripe_form()
+function stripe_form($atts)
 {
+    // Default shortcode attributes
+    $atts = shortcode_atts(['amount' => '', 'currency' => 'usd'], $atts, 'stripe_payment_form');
+
+    // Make $amount available in the template
+    $amount = $atts['amount'];
+    $currency = $atts['currency'];
+
     ob_start();
 
     require plugin_dir_path(__FILE__) . 'templates/stripe_payment_form.php';
