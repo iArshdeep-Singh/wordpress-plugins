@@ -1,0 +1,91 @@
+.stripe-payment-wrap {
+  max-width: 380px;
+  margin: 40px auto;
+  padding: 32px;
+  background: #ffffff;
+  border: 1px solid #e0e0e5;
+  border-radius: 18px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto,
+    sans-serif;
+}
+
+.stripe-payment-wrap #amount {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  font-size: 16px;
+  border: 1px solid #e0e0e5;
+  border-radius: 12px;
+  outline: none;
+  margin-bottom: 16px;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+  background: #fafafa;
+}
+
+.stripe-payment-wrap #amount:focus {
+  border-color: #000;
+  background: #fff;
+}
+
+.stripe-payment-wrap #amount::placeholder {
+  color: #9a9a9e;
+}
+
+.stripe-payment-wrap button {
+  width: 100%;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition:
+    transform 0.08s ease,
+    opacity 0.2s ease,
+    background 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.stripe-payment-wrap button:active {
+  transform: scale(0.98);
+}
+
+/* Primary black "Apple Pay" style button */
+.stripe-payment-wrap #load-payment,
+.stripe-payment-wrap #payment-button {
+  background: #000;
+  color: #fff;
+  margin-bottom: 12px;
+}
+
+.stripe-payment-wrap #load-payment:hover,
+.stripe-payment-wrap #payment-button:hover {
+  background: #1a1a1a;
+}
+
+.stripe-payment-wrap #load-payment:disabled,
+.stripe-payment-wrap #payment-button:disabled {
+  background: #d0d0d5;
+  color: #8a8a8e;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.stripe-payment-wrap #payment-element {
+  margin: 16px 0;
+}
+
+.stripe-payment-wrap #message {
+  text-align: center;
+  font-size: 14px;
+  color: #d0021b;
+  margin-top: 12px;
+  min-height: 18px;
+}
+
+.stripe-payment-wrap #message.success {
+  color: #1a7f37;
+}

@@ -11,6 +11,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+$pk = parse_ini_file(__DIR__ . '/.env')['PK'];
+define('PK', $pk);
+
 function plugin_scripts()
 {
     wp_enqueue_script(
@@ -34,7 +37,7 @@ function plugin_scripts()
         'stripe_data',
         [
             'endpoint' => plugins_url('endpoint.php', __FILE__),
-            'pk' => ''
+            'pk' => PK
         ]
     );
 

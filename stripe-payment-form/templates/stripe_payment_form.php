@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 
 ?>
 
-<div>
+<div class="stripe-payment-wrap">
 
     <input type="text" id="amount" placeholder="Enter Amount" />
     <button id="load-payment">Proceed</button>

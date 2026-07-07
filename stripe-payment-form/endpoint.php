@@ -4,7 +4,8 @@ $data = json_decode(file_get_contents("php://input"), true);
 
 $amount = $data['amount'];
 
-$sk = "";
+$env = parse_ini_file(__DIR__ . '/.env');
+$sk = $env['SK'];
 $url = "https://api.stripe.com/v1/payment_intents";
 
 $body = [
