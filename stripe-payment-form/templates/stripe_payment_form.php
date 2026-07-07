@@ -4,34 +4,15 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'])
-
-
-
-$sk = "";
-$url = "";
-
-$ch = curl_init();
-
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_HTTPhEADER, [
-    "Content-Type: application/json",
-    "Authorization: Bearer "
-]);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
-
-
-$response = curl_exec($ch);
-
-if (curl_errno($ch)) {
-    echo curl_error($ch);
-} else {
-    echo $response;
-}
-
 ?>
 
 <div>
 
+    <input type="text" id="amount" placeholder="Enter Amount" />
+    <button id="load-payment">Proceed</button>
+
+    <div id="payment-element"></div>
+
+    <button id="payment-button" style="display: none;">Pay Now</button>
+    <div id="message"></div>
 </div>
