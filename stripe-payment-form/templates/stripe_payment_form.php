@@ -6,18 +6,18 @@ if (!defined('ABSPATH')) {
 
 ?>
 
-<div class="stripe-payment-wrap">
-    <label for="currency">Currency</label>
+<div class="stripe-payment-wrap" style="display: none">
+    <label for="currency" style="display: none;">Currency</label>
 
     <select id="currency">
-        <option value="usd" data-symbol="$">USD ($)</option>
-        <option value="eur" data-symbol="€">EUR (€)</option>
-        <option value="gbp" data-symbol="£">GBP (£)</option>
-        <option value="inr" data-symbol="₹">INR (₹)</option>
-        <option value="cad" data-symbol="$">CAD ($)</option>
+        <option value="usd" data-symbol="$" <?= $currency == "usd" ? "selected" : "" ?>>USD ($)</option>
+        <option value="eur" data-symbol="€" <?= $currency == "eur" ? "selected" : "" ?>>EUR (€)</option>
+        <option value="gbp" data-symbol="£" <?= $currency == "gbp" ? "selected" : "" ?>>GBP (£)</option>
+        <option value="inr" data-symbol="₹" <?= $currency == "inr" ? "selected" : "" ?>>INR (₹)</option>
+        <option value="cad" data-symbol="$" <?= $currency == "cad" ? "selected" : "" ?>>CAD ($)</option>
     </select>
 
-    <input type="text" id="amount" placeholder="Enter Amount" value="<?php echo esc_attr($amount); ?>" />
+    <input type="text" id="amount" placeholder="Enter Amount" value="<?= $amount ?>" />
     <button id="load-payment">Proceed</button>
 
     <div id="submitted-amount"></div>
