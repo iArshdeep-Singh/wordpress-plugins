@@ -147,13 +147,25 @@
     // pay button
     pay_button.addEventListener('click', async function () {
         pay_button.disabled = true
-        const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required" })
+        const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required", confirmParams: { return_url: stripe_data.save_payment } })
 
         if (error) {
             pay_button.disabled = false
             error_message.innerHTML = error.message
         } else {
             if (paymentIntent.status === 'succeeded') {
+
+                console.log(paymentIntent)
+
+                await fetch(stripe_data.save_payment, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ payment_intent: paymentIntent?.id })
+                }).then(async (response) => await response.json()).then(data => console.log(data))
+
+
                 paymentElement.unmount()
                 submitted_amount.style.display = "none"
                 pay_button.style.display = "none"

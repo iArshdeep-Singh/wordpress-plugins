@@ -11,6 +11,39 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// Create table in wordpress database
+register_activation_hook(__FILE__, 'stripe_plugin_create_table');
+
+function stripe_plugin_create_table()
+{
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'stripe_payment_logs';
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name(
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    amount DECIMAL(10,2),
+    currency VARCHAR(50),
+    status VARCHAR(50),
+    type VARCHAR(100),
+    brand VARCHAR(100),
+    last4 VARCHAR(50),
+    exp_year INT,
+    exp_month INT,
+    card_country VARCHAR(200)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+    ), $charset_collate;";
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
+
+    dbDelta($sql);
+}
+
+
+
 $pk = parse_ini_file(__DIR__ . '/.env')['PK'];
 define('PK', $pk);
 
@@ -37,6 +70,7 @@ function plugin_scripts()
         'stripe_data',
         [
             'endpoint' => plugins_url('endpoint.php', __FILE__),
+            'save_payment' => plugins_url('save_payment.php', __FILE__),
             'pk' => PK
         ]
     );
