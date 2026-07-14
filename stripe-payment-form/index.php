@@ -32,10 +32,10 @@ function stripe_plugin_create_table()
     last4 VARCHAR(50),
     exp_year INT,
     exp_month INT,
-    card_country VARCHAR(200)
+    card_country VARCHAR(200),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
-    ), $charset_collate;";
+    ) $charset_collate;";
 
     require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
 
