@@ -11,6 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+
 // Create table in wordpress database
 register_activation_hook(__FILE__, 'stripe_plugin_create_table');
 
@@ -89,7 +90,7 @@ add_action('wp_enqueue_scripts', 'plugin_scripts');
 function stripe_form($atts)
 {
     // Default shortcode attributes
-    $atts = shortcode_atts(['amount' => '', 'currency' => 'usd'], $atts, 'stripe_payment_form');
+    $atts = shortcode_atts(['amount' => '', 'currency' => ''], $atts, 'stripe_payment_form');
 
     // Make $amount available in the template
     $amount = $atts['amount'];
@@ -115,3 +116,40 @@ function stripe_form($atts)
 
 add_shortcode('stripe_payment_form', 'stripe_form');
 
+
+
+// add menu pages
+add_action('admin_menu', 'stripe_plugin_admin_menu');
+
+function stripe_plugin_admin_menu()
+{
+    add_menu_page(
+        'Stripe Payment Form',      // Page title
+        'Payment Form',             // Menu title
+        'manage_options',           // Capability
+        'stripe-payment-form',      // Menu slug
+        'plugin_dashboard',         // callback function
+        'dashicons-money-alt',      // Icon
+        25                          // Position
+    );
+
+    add_submenu_page(
+        'stripe-payment-form',      // Parent slug
+        'Payment Logs',             // Page title
+        'Payment Logs',             // Menu title
+        'manage_options',
+        'payment-logs',             // Menu slug
+        'payment_logs'              // Callback function 
+
+    );
+}
+
+function plugin_dashboard()
+{
+    require plugin_dir_path(__FILE__) . 'admin/settings.php';
+}
+
+function payment_logs()
+{
+    require plugin_dir_path(__FILE__) . 'admin/logs.php';
+}

@@ -14,7 +14,7 @@ $body = [
     'currency' => $currency,
     'automatic_payment_methods[enabled]' => 'true',
     // 'payment_method_types' => ['card'], // show only card
-    // 'receipt_email' => "iarshdeephans@gmail.com"// show only card
+    // // 'receipt_email' => "iarshdeephans@gmail.com"// show only card
     "excluded_payment_method_types" => [
         "cashapp"
     ]

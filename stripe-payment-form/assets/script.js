@@ -36,7 +36,7 @@
 
             body: JSON.stringify({
                 amount: enteredAmount,
-                currency: "usd"
+                currency: currency
             })
         }).then(async (res) => await res.json()).then((data) => {
 
