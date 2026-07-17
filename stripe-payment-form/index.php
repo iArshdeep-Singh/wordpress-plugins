@@ -11,9 +11,10 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
+$pk = parse_ini_file(__DIR__ . '/.env')['PK'];
+define('PK', $pk);
 // Create table in wordpress database
-register_activation_hook(__FILE__, 'stripe_plugin_create_table');
+
 
 function stripe_plugin_create_table()
 {
@@ -45,10 +46,7 @@ function stripe_plugin_create_table()
 
 
 
-$pk = parse_ini_file(__DIR__ . '/.env')['PK'];
-define('PK', $pk);
-
-function plugin_scripts()
+function plugin_frontend_scripts()
 {
     wp_enqueue_script(
         'stripe-js',
@@ -65,6 +63,7 @@ function plugin_scripts()
         '1.0',
         true
     );
+
 
     wp_localize_script(  // A WordPress function used to pass PHP data (such as URLs, API keys, AJAX URLs, or nonces) to a JavaScript file before it loads.
         'my-script',
@@ -84,7 +83,25 @@ function plugin_scripts()
     );
 }
 
-add_action('wp_enqueue_scripts', 'plugin_scripts');
+function plugin_admin_scripts()
+{
+    wp_enqueue_script(
+        'logs-script',
+        plugins_url('assets/logs.js', __FILE__),
+        [],
+        null,
+        true
+    );
+
+    wp_localize_script(
+        'logs-script',
+        'logs_data',
+        [
+            'ajax_url' => admin_url('admin-ajax.php')
+        ]
+    );
+
+}
 
 
 function stripe_form($atts)
@@ -114,12 +131,7 @@ function stripe_form($atts)
 
 // }
 
-add_shortcode('stripe_payment_form', 'stripe_form');
 
-
-
-// add menu pages
-add_action('admin_menu', 'stripe_plugin_admin_menu');
 
 function stripe_plugin_admin_menu()
 {
@@ -152,4 +164,18 @@ function plugin_dashboard()
 function payment_logs()
 {
     require plugin_dir_path(__FILE__) . 'admin/logs.php';
+
 }
+
+function get_payment_logs()
+{
+    require plugin_dir_path(__FILE__) . 'admin/logs.php';
+}
+
+
+register_activation_hook(__FILE__, 'stripe_plugin_create_table');
+add_action('wp_enqueue_scripts', 'plugin_frontend_scripts');  // Loads Scritps on the frontend
+add_action('admin_enqueue_scripts', 'plugin_admin_scripts');  // Loads Scripts on the admin menu
+add_action('admin_menu', 'stripe_plugin_admin_menu'); // add menu pages
+add_action('wp_ajax_get_payment_logs', 'get_payment_logs'); // Registers the get_payment_logs() function to handle the AJAX request with the action name get_payment_logs for logged-in WordPress users.
+add_shortcode('stripe_payment_form', 'stripe_form');
