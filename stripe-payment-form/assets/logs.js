@@ -3,9 +3,9 @@
     const table = document.getElementById("payment-logs")
     const previous = document.getElementById("previous")
     const next = document.getElementById("next")
-    const limit = 5
+    let limit = 5
 
-    sessionStorage.setItem("offset", limit)
+    // sessionStorage.setItem("offset", limit)
 
     document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
@@ -21,20 +21,23 @@
         append_rows(rows)
 
 
-        let offset = sessionStorage.getItem("offset")
+        // let offset = Number(sessionStorage.getItem("offset"))
 
-        next.value = offset
-        previous.value = offset - limit
+        next.value = limit
+        previous.value = 0
 
-        console.log(next.value)
-        console.log(previous.value)
-        console.log(log_data)
+        console.log(previous.value, "previous")
+        console.log(next.value, "next")
     })
 
+    next.addEventListener('click', next_previous_button);
+    previous.addEventListener('click', next_previous_button);
 
-    next.addEventListener('click', async () => {
+    async function next_previous_button() {
 
-        let offset = sessionStorage.getItem("offset")
+
+
+        let offset = Number(this.value)
 
         const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
             headers: { "content-type": "application/json" },
@@ -45,14 +48,48 @@
         const log_data = await response.json()
         let { columns, rows, count } = log_data
 
-        next.value = limit + offset
-        sessionStorage.setItem("offset", limit + offset)
+        let total = Number(count)
+        let updated_offset
+
+
+        if (this.id === "previous") {
+
+            if (offset == 0) {
+                return
+            }
+
+            updated_offset = offset - limit
+            this.value = updated_offset
+            next.value = offset
+        }
+
+
+        if (this.id === "next") {
+
+            if (offset >= total) {
+                return
+            }
+
+            updated_offset = limit + offset
+            this.value = updated_offset
+            previous.value = offset
+
+        }
+
+
+
+        console.log(previous.value, "previous")
+        console.log(next.value, "next")
+
+
 
         append_headers(columns)
         append_rows(rows)
 
         console.log(log_data)
-    })
+
+    }
+
 
 
 

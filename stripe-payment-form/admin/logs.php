@@ -14,10 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $order_by = "created_at";
     $order = "ASC";
     // $limit = 20;
-    $limit = $data["limit"] ?? 20;
+    $limit = $data["limit"] ?? 5;
     $offset = $data['offset'] ?? 0;
     // $card = true;
-    $card = $data['card'] ?? false;
+    $card = $data['card'] ?? true;
 
     $sql = "";
     $fields_sql = "";
@@ -77,5 +77,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <button id="previous">Previous</button>
     <button id="next">Next</button>
     <table id="payment-logs"></table>
-    <button id="send">Click</button>
 </div>
