@@ -3,19 +3,28 @@
     const table = document.getElementById("payment-logs")
     const previous = document.getElementById("previous")
     const next = document.getElementById("next")
-    let limit = 5
+    let limit = 15
+    let card = true
+    // let card = false
 
     // sessionStorage.setItem("offset", limit)
 
     document.addEventListener('DOMContentLoaded', async () => {
+
         const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
             headers: { "content-type": "application/json" },
             method: 'POST',
-            body: JSON.stringify({ card: true, limit: limit, offset: 0 })
+            body: JSON.stringify({ card: card, limit: limit, offset: 0 })
         })
 
         const log_data = await response.json()
-        let { columns, rows } = log_data
+        let { columns, rows, count } = log_data
+
+        let total = Number(count)
+
+        if (limit >= total) {
+            next.disabled = true
+        }
 
         append_headers(columns)
         append_rows(rows)
@@ -36,13 +45,14 @@
     async function next_previous_button() {
 
 
-
         let offset = Number(this.value)
+
+        console.log(offset, "-offset", this.id)
 
         const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
             headers: { "content-type": "application/json" },
             method: 'POST',
-            body: JSON.stringify({ card: true, limit: limit, offset: offset })
+            body: JSON.stringify({ card: card, limit: limit, offset: offset })
         })
 
         const log_data = await response.json()
@@ -52,11 +62,19 @@
         let updated_offset
 
 
+        append_headers(columns)
+        append_rows(rows)
+
+
+
         if (this.id === "previous") {
 
             if (offset == 0) {
+                this.disabled = true
                 return
             }
+
+            console.log("[previous]")
 
             updated_offset = offset - limit
             this.value = updated_offset
@@ -66,9 +84,12 @@
 
         if (this.id === "next") {
 
-            if (offset >= total) {
+            if (offset + limit >= total) {
+                this.disabled = true
                 return
             }
+
+            console.log("[next]")
 
             updated_offset = limit + offset
             this.value = updated_offset
@@ -76,15 +97,13 @@
 
         }
 
-
+        previous.disabled = false
+        next.disabled = false
 
         console.log(previous.value, "previous")
         console.log(next.value, "next")
 
 
-
-        append_headers(columns)
-        append_rows(rows)
 
         console.log(log_data)
 

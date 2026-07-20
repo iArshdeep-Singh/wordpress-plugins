@@ -1,8 +1,8 @@
 {
-  "id": "py_3Tu6oN7aDohHdP4U1PzMYFs7",
+  "id": "py_3TvHi77aDohHdP4U1h0aZDfe",
   "object": "charge",
-  "amount": 2013,
-  "amount_captured": 2013,
+  "amount": 75000,
+  "amount_captured": 75000,
   "amount_refunded": 0,
   "application": null,
   "application_fee": null,
@@ -18,14 +18,14 @@
       "state": null
     },
     "email": null,
-    "name": "Abhimanyu Katoch",
+    "name": null,
     "phone": null,
     "tax_id": null
   },
   "calculated_statement_descriptor": null,
   "captured": true,
-  "created": 1784275692,
-  "currency": "eur",
+  "created": 1784555913,
+  "currency": "krw",
   "customer": null,
   "description": null,
   "destination": null,
@@ -50,19 +50,21 @@
     "type": "authorized"
   },
   "paid": true,
-  "payment_intent": "pi_3Tu6oN7aDohHdP4U16cMjhmz",
-  "payment_method": "pm_1Tu6oX7aDohHdP4Uo9ukcBOa",
+  "payment_intent": "pi_3TvHi77aDohHdP4U1SKyT7Xk",
+  "payment_method": "pm_1TvHiD7aDohHdP4UX59hYSbe",
   "payment_method_details": {
-    "eps": {
-      "bank": null,
-      "verified_name": "Jenny Rosen"
+    "kr_card": {
+      "brand": null,
+      "buyer_id": "testmode_fake_buyer_id",
+      "last4": null,
+      "transaction_id": "aec73753-d8fe-43f9-8ac8-831892c78942"
     },
-    "type": "eps"
+    "type": "kr_card"
   },
   "radar_options": {},
   "receipt_email": null,
   "receipt_number": null,
-  "receipt_url": "https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xU1E0UjE3YURvaEhkUDRVKO_F59IGMgb5E4-bftc6LBYKJ_lSiEzI_wpnQ1RxetVRdC5uE5cBKAQyeiIgU17Hmlegd2ZLMx_-zdb5",
+  "receipt_url": "https://pay.stripe.com/receipts/payment/CAcaFwoVYWNjdF8xU1E0UjE3YURvaEhkUDRVKIvT-NIGMgYMyqrqAUU6LBYijvg92mNOFWWL9jZwkIUa7AQEQGlCPtNmMine4bScDMTmTPcWHSnBIZP5",
   "refunded": false,
   "review": null,
   "shipping": null,

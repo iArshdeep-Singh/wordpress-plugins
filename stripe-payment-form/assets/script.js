@@ -4,6 +4,7 @@
 
     let elements
     let paymentElement
+    let expressCheckout
 
     const amount = document.getElementById('amount')
     const proceed_button = document.getElementById('load-payment')
@@ -18,7 +19,7 @@
 
     let data = null
 
-    if (amount.value > 0) {
+    if (amount?.value > 0) {
 
 
         const enteredAmount = parseFloat(Number(amount.value)) * 100
@@ -127,7 +128,8 @@
 
             elements = stripe.elements({ clientSecret: data.client_secret })
 
-            paymentElement = elements.create("payment", { layout: "tabs", wallets: { link: "never" } })
+            paymentElement = elements.create("payment", { layout: "tabs" })
+
 
             // console.log(paymentElement)
 

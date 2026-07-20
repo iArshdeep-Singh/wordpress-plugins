@@ -74,7 +74,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <h1>Logs</h1>
 
 <div id="logs">
-    <button id="previous">Previous</button>
+    <button id="previous" disabled>Previous</button>
     <button id="next">Next</button>
+    <!-- <select name="" id="limit">
+        <option value="25" selected>25</option>
+        <option value="50">50</option>
+        <option value="100">100</option>
+        <option value="200">200</option>
+    </select> -->
     <table id="payment-logs"></table>
 </div>
