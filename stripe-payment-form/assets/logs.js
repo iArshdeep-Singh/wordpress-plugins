@@ -34,9 +34,6 @@
 
         next.value = limit
         previous.value = 0
-
-        console.log(previous.value, "previous")
-        console.log(next.value, "next")
     })
 
     next.addEventListener('click', next_previous_button);
@@ -44,10 +41,7 @@
 
     async function next_previous_button() {
 
-
         let offset = Number(this.value)
-
-        console.log(offset, "-offset", this.id)
 
         const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
             headers: { "content-type": "application/json" },
@@ -74,8 +68,6 @@
                 return
             }
 
-            console.log("[previous]")
-
             updated_offset = offset - limit
             this.value = updated_offset
             next.value = offset
@@ -89,8 +81,6 @@
                 return
             }
 
-            console.log("[next]")
-
             updated_offset = limit + offset
             this.value = updated_offset
             previous.value = offset
@@ -99,13 +89,6 @@
 
         previous.disabled = false
         next.disabled = false
-
-        console.log(previous.value, "previous")
-        console.log(next.value, "next")
-
-
-
-        console.log(log_data)
 
     }
 
