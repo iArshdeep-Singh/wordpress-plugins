@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $table = $wpdb->prefix . "stripe_payment_logs";
 
     $type = "card";
-    $order_by = "created_at";
-    $order = "ASC";
+    $order_by = $data["sort_by"] ?? "created_at";
+    $order = $data["order"] ?? "ASC";
     // $limit = 20;
     $limit = $data["limit"] ?? 5;
     $offset = $data['offset'] ?? 0;
@@ -76,11 +76,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <div id="logs">
     <button id="previous" disabled>Previous</button>
     <button id="next">Next</button>
-    <!-- <select name="" id="limit">
-        <option value="25" selected>25</option>
+    <label for="name">Per Page</label>
+    <select name="limit" class="limit-type-sort-order">
+        <option value="10" selected>10</option>
+        <option value="25">25</option>
         <option value="50">50</option>
         <option value="100">100</option>
         <option value="200">200</option>
-    </select> -->
-    <table id="payment-logs"></table>
+    </select>
+    <label for="type">Type</label>
+    <select name="type" class="limit-type-sort-order">
+        <option value="true" selected>Card Payment</option>
+        <option value="false">Express Checkout</option>
+    </select>
+    <label for="sort">Sort By</label>
+    <select name="sort_by" class="limit-type-sort-order"></select>
+    <label for="order">Order</label>
+    <select name="order" class="limit-type-sort-order">
+        <option value="ASC" selected>Ascending</option>
+        <option value="DESC">Descending</option>
+    </select>
+    <table id="payment-logs" border="1"></table>
 </div>

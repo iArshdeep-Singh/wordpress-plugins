@@ -69,8 +69,6 @@ function stripe_payment_intent_and_charges($sk, $id)
         $res = curl_exec($curl);
         $decoded = json_decode($res);
 
-        file_put_contents("stripe.json", $res);
-
         if (isset($decoded->status) && $decoded->status == "succeeded") {
 
             global $wpdb;

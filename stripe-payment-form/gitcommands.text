@@ -1,0 +1,30 @@
+[--GIT COMMANDS--]
+
+----------------------------------------------------
+GIT VERSION CHECK
+
+git --version 
+----------------------------------------------------
+GIT CONFIGURATION
+
+git config --global user.name "<name>"  [set name]
+git config --global user.email "<email>"    [set email]
+
+git config --global --list  [verify configuration]
+or
+git config --list   [verify configuration]
+
+----------------------------------------------------
+GIT REPOSITORY SETUP
+
+git clone <repository-url>  [clone a repository]
+
+git init    [initialize a new repository]
+
+git remote -v   [check remote repositories]
+git remote add origin <repository-url>  [add a remote]
+
+----------------------------------------------------
+CHECK STATUS
+
+git status [view repository status]

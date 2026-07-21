@@ -3,22 +3,20 @@
     const table = document.getElementById("payment-logs")
     const previous = document.getElementById("previous")
     const next = document.getElementById("next")
-    let limit = 15
+    let limit = 10
     let card = true
-    // let card = false
+    let offset = 0
+    let sort_by = "created_at"
+    let order = "ASC"
 
-    // sessionStorage.setItem("offset", limit)
 
     document.addEventListener('DOMContentLoaded', async () => {
 
-        const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
-            headers: { "content-type": "application/json" },
-            method: 'POST',
-            body: JSON.stringify({ card: card, limit: limit, offset: 0 })
-        })
+        let { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
 
-        const log_data = await response.json()
-        let { columns, rows, count } = log_data
+        console.log(columns)
+
+        create_sorting(columns, "created_at")
 
         let total = Number(count)
 
@@ -29,28 +27,86 @@
         append_headers(columns)
         append_rows(rows)
 
-
-        // let offset = Number(sessionStorage.getItem("offset"))
-
         next.value = limit
         previous.value = 0
     })
 
-    next.addEventListener('click', next_previous_button);
-    previous.addEventListener('click', next_previous_button);
 
-    async function next_previous_button() {
+    next.addEventListener('click', () => next_previous_button(event, card, limit, sort_by, order));
+    previous.addEventListener('click', () => next_previous_button(event, card, limit, sort_by, order));
 
-        let offset = Number(this.value)
+    // handle limit, type, sorting and order by
+    document.querySelectorAll('.limit-type-sort-order').forEach(element => {
 
-        const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
-            headers: { "content-type": "application/json" },
-            method: 'POST',
-            body: JSON.stringify({ card: card, limit: limit, offset: offset })
+        element.addEventListener('change', async function (event) {
+
+            console.log(offset, "-offset")
+
+            if (this.name == "limit") {
+                limit = Number(this.value)
+                console.log(limit, "-limit")
+            }
+            if (this.name == "type") {
+                card = this.value === "true"
+                offset = 0
+                next.value = limit
+                previous.value = 0
+                console.log(card)
+            }
+
+            if (this.name == "sort_by") {
+                sort_by = this.value
+                console.log(sort_by, "-sort_by")
+            }
+
+            if (this.name == "order") {
+                order = this.value
+                console.log(order, "-order")
+            }
+
+            const { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
+
+            console.log(rows)
+            console.log(count)
+
+            create_sorting(columns, sort_by)
+            append_headers(columns)
+            append_rows(rows)
+
+            if (limit + offset >= Number(count)) {
+                next.disabled = true
+                return
+            }
+
+            if (limit + offset < Number(count)) {
+                next.disabled = false
+                return
+            }
+
+            if (offset == 0) {
+                previous.disabled = true
+                return
+            }
+
+            previous.disabled = false
+            next.disabled = false
         })
+    })
 
-        const log_data = await response.json()
-        let { columns, rows, count } = log_data
+
+
+    // handle next-previous page
+    async function next_previous_button(event, card, limit, sort_by, order) {
+        console.log(card, "card")
+        console.log(limit, "limit")
+        console.log(sort_by, "sort")
+        console.log(order, "order")
+
+        offset = Number(event.target.value)
+
+        console.log(offset, "offset")
+
+        let { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
 
         let total = Number(count)
         let updated_offset
@@ -59,41 +115,36 @@
         append_headers(columns)
         append_rows(rows)
 
-
-
-        if (this.id === "previous") {
+        if (event.target.id === "previous") {
 
             if (offset == 0) {
-                this.disabled = true
+                event.target.disabled = true
+                next.disabled = false
                 return
             }
 
             updated_offset = offset - limit
-            this.value = updated_offset
+            event.target.value = updated_offset
             next.value = offset
         }
 
 
-        if (this.id === "next") {
+        if (event.target.id === "next") {
 
             if (offset + limit >= total) {
-                this.disabled = true
+                event.target.disabled = true
+                previous.disabled = false
                 return
             }
 
             updated_offset = limit + offset
-            this.value = updated_offset
+            event.target.value = updated_offset
             previous.value = offset
-
         }
 
         previous.disabled = false
         next.disabled = false
-
     }
-
-
-
 
     function append_rows(rows) {
         rows.forEach(rows => {
@@ -131,6 +182,37 @@
         // for...in() can be used for both ARRAYS and OBJECTS
         // append() can append DOM elements, text directly, and multiple values and returns 'undefined'
         // appendChild() appends only a single DOM element, doesn't append text, and the returns appended node
+    }
+
+    function create_sorting(columns, default_selected) {
+
+        console.log(default_selected, "default")
+
+        let select = document.getElementsByName("sort_by")[0]
+
+        select.innerHTML = ""
+
+        for (key in columns) {
+            let opt = document.createElement("option")
+
+            opt.textContent = columns[key]
+            opt.value = key
+            opt.selected = default_selected == key ? true : false
+
+            select.appendChild(opt)
+        }
+    }
+
+    async function call_api(card, limit, offset, sort_by, order) {
+        const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
+            headers: { "content-type": "application/json" },
+            method: 'POST',
+            body: JSON.stringify({ card: card, limit: limit, offset: offset, sort_by: sort_by, order: order })
+        })
+
+        const data = await response.json()
+
+        return data
     }
 
 })()
