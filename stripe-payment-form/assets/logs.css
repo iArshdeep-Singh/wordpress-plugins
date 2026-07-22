@@ -1,0 +1,141 @@
+/* Wrapper */
+#logs-wrap {
+  max-width: 1400px;
+  margin: 30px auto;
+  padding: 25px;
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+#logs-wrap h1 {
+  margin: 0 0 25px;
+  font-size: 28px;
+  color: #1d2327;
+}
+
+/* Toolbar */
+#logs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+#logs label {
+  font-weight: 600;
+  color: #444;
+}
+
+#logs select {
+  min-width: 150px;
+  height: 38px;
+  padding: 0 12px;
+  border: 1px solid #c3c4c7;
+  border-radius: 6px;
+  background: #fff;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+#logs select:focus {
+  outline: none;
+  border-color: #2271b1;
+  box-shadow: 0 0 0 2px rgba(34, 113, 177, 0.2);
+}
+
+/* Buttons */
+#logs button {
+  height: 38px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 6px;
+  background: #2271b1;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+#logs button:hover:not(:disabled) {
+  background: #135e96;
+}
+
+#logs button:disabled {
+  background: #c3c4c7;
+  cursor: not-allowed;
+}
+
+/* Table */
+#payment-logs {
+  width: 100%;
+  margin-top: 25px;
+  border-collapse: collapse;
+  background: #fff;
+  border: 1px solid #dcdcde;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+#payment-logs thead {
+  background: #f6f7f7;
+}
+
+#payment-logs th,
+#payment-logs td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 14px;
+}
+
+#payment-logs th {
+  font-weight: 600;
+  color: #1d2327;
+  white-space: nowrap;
+}
+
+#payment-logs td {
+  color: #444;
+  vertical-align: middle;
+  word-break: break-word;
+}
+
+/* Alternating row colors */
+#payment-logs tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+#payment-logs tbody tr:nth-child(even) {
+  background-color: #f6f7f8;
+}
+
+/* Hover effect */
+#payment-logs tbody tr:hover {
+  background-color: #eaf4ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #logs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  #logs button,
+  #logs select {
+    width: 100%;
+  }
+
+  #payment-logs {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+}

@@ -64,6 +64,9 @@ git commit -am "<message>"  [stage and commit tracked files]
 
 git commit --amend  [edit previous commit message]
 
+git revert <commit-hash>    [creates a new commit that safely reverses a specified commit without changing git history]
+
+git reflog  [recover a reset or deleted commit]
 
 ----------------------------------------------------
 BRANCHES
