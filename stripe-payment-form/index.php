@@ -101,6 +101,13 @@ function plugin_admin_scripts()
         ]
     );
 
+    wp_enqueue_style(
+        'logs-style',
+        plugins_url('assets/logs.css', __FILE__),
+        [],
+        '1.0'
+    );
+
 }
 
 

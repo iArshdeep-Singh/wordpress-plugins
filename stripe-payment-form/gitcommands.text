@@ -4,6 +4,7 @@
 GIT VERSION CHECK
 
 git --version 
+
 ----------------------------------------------------
 GIT CONFIGURATION
 
@@ -13,6 +14,7 @@ git config --global user.email "<email>"    [set email]
 git config --global --list  [verify configuration]
 or
 git config --list   [verify configuration]
+
 
 ----------------------------------------------------
 GIT REPOSITORY SETUP
@@ -24,7 +26,68 @@ git init    [initialize a new repository]
 git remote -v   [check remote repositories]
 git remote add origin <repository-url>  [add a remote]
 
+
 ----------------------------------------------------
 CHECK STATUS
 
 git status [view repository status]
+
+git log [view commit history]
+
+git log --oneline [one-line commit history]
+
+git diff    [show changes]
+
+git diff <local-branch> origin/<remote-branch>   [compare local branch with remote branch]
+
+
+----------------------------------------------------
+STAGING
+
+git add <file>/<folder> [stage a file or folder]
+
+git add .   [stage all files]
+
+git add -u  [stage all modified/deleted files]
+
+git restore --staged <file>/<folder>    [unstage a file or a folder]
+
+git restore --staged .  [unstage everything]
+
+
+----------------------------------------------------
+COMMIT
+
+git commit -m "<message>"   [commit staged changes]
+
+git commit -am "<message>"  [stage and commit tracked files]
+
+git commit --amend  [edit previous commit message]
+
+
+----------------------------------------------------
+BRANCHES
+
+git branch  [list branches]
+
+git branch <branch-name>    [create a branch]
+
+git switch <branch-name>    [switch branch]
+
+git switch -C <branch-name> [create and switch branch]
+
+git branch -d <branch-name> [delete branch]
+
+git branch -D <branch-name> [force delete]
+
+
+----------------------------------------------------
+REMOVE FILES/FOLDERS
+
+git rm <file-name>  [removes the file locally and stages its deletion from the git repository.]
+
+git rm --cached <file-name> [stops tracking the file while keeping the local copy unchanged.]
+
+git rm -r <folder>  [recursively removes the folder locally and stages its deletion from git.]
+
+git rm -r --cached <folder> [stops tracking the folder while keeping all local files and subfolders]

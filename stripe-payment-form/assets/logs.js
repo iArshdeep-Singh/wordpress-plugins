@@ -3,18 +3,21 @@
     const table = document.getElementById("payment-logs")
     const previous = document.getElementById("previous")
     const next = document.getElementById("next")
-    let limit = 10
-    let card = true
+    let limit = Number(document.querySelector('select[name="limit"]').value)
+    // let limit = 17
+    let card = document.querySelector('select[name="type"]').value
     let offset = 0
     let sort_by = "created_at"
-    let order = "ASC"
+    let order = document.querySelector('select[name="order"]').value
 
 
     document.addEventListener('DOMContentLoaded', async () => {
 
         let { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
 
+
         console.log(columns)
+        console.log(rows)
 
         create_sorting(columns, "created_at")
 
@@ -38,12 +41,17 @@
     // handle limit, type, sorting and order by
     document.querySelectorAll('.limit-type-sort-order').forEach(element => {
 
-        element.addEventListener('change', async function (event) {
+        element.addEventListener('change', async function () {
 
             console.log(offset, "-offset")
 
             if (this.name == "limit") {
                 limit = Number(this.value)
+
+                offset = 0
+                next.value = limit
+                previous.value = 0
+
                 console.log(limit, "-limit")
             }
             if (this.name == "type") {
@@ -51,22 +59,25 @@
                 offset = 0
                 next.value = limit
                 previous.value = 0
-                console.log(card)
+                // console.log(card)
             }
 
             if (this.name == "sort_by") {
                 sort_by = this.value
-                console.log(sort_by, "-sort_by")
+                offset = 0
+                next.value = limit
+                previous.value = 0
+                // console.log(sort_by, "-sort_by")
             }
 
             if (this.name == "order") {
                 order = this.value
-                console.log(order, "-order")
+                // console.log(order, "-order")
             }
 
             const { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
 
-            console.log(rows)
+            // console.log(rows)
             console.log(count)
 
             create_sorting(columns, sort_by)
@@ -75,6 +86,7 @@
 
             if (limit + offset >= Number(count)) {
                 next.disabled = true
+                previous.disabled = true
                 return
             }
 
@@ -83,7 +95,7 @@
                 return
             }
 
-            if (offset == 0) {
+            if (offset <= 0) {
                 previous.disabled = true
                 return
             }
@@ -97,14 +109,10 @@
 
     // handle next-previous page
     async function next_previous_button(event, card, limit, sort_by, order) {
-        console.log(card, "card")
-        console.log(limit, "limit")
-        console.log(sort_by, "sort")
-        console.log(order, "order")
 
         offset = Number(event.target.value)
 
-        console.log(offset, "offset")
+        // console.log(offset, "offset")
 
         let { columns, rows, count } = await call_api(card, limit, offset, sort_by, order)
 
@@ -115,17 +123,20 @@
         append_headers(columns)
         append_rows(rows)
 
+
         if (event.target.id === "previous") {
 
-            if (offset == 0) {
+            if (offset <= 0) {
                 event.target.disabled = true
                 next.disabled = false
+                next.value = limit
                 return
             }
 
+
             updated_offset = offset - limit
             event.target.value = updated_offset
-            next.value = offset
+            next.value = offset + limit
         }
 
 
@@ -134,19 +145,24 @@
             if (offset + limit >= total) {
                 event.target.disabled = true
                 previous.disabled = false
+                previous.value = offset - limit
                 return
             }
 
             updated_offset = limit + offset
             event.target.value = updated_offset
-            previous.value = offset
+            previous.value = offset - limit
         }
+
+        console.log(Number(next.value), "next")
+        console.log(Number(previous.value), "previous")
 
         previous.disabled = false
         next.disabled = false
     }
 
     function append_rows(rows) {
+
         rows.forEach(rows => {
 
             let tr = document.createElement('tr')
