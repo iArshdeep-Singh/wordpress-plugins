@@ -1,4 +1,5 @@
 (async () => {
+
     const stripe = Stripe(stripe_data.pk)
 
 

@@ -1,0 +1,176 @@
+[
+  {
+    "value": "usd",
+    "code": "USD",
+    "symbol": "$",
+    "name": "United States Dollar"
+  },
+  {
+    "value": "eur",
+    "code": "EUR",
+    "symbol": "€",
+    "name": "Euro"
+  },
+  {
+    "value": "gbp",
+    "code": "GBP",
+    "symbol": "£",
+    "name": "British Pound Sterling"
+  },
+  {
+    "value": "inr",
+    "code": "INR",
+    "symbol": "₹",
+    "name": "Indian Rupee"
+  },
+  {
+    "value": "cad",
+    "code": "CAD",
+    "symbol": "$",
+    "name": "Canadian Dollar"
+  },
+  {
+    "value": "aud",
+    "code": "AUD",
+    "symbol": "A$",
+    "name": "Australian Dollar"
+  },
+  {
+    "value": "nzd",
+    "code": "NZD",
+    "symbol": "NZ$",
+    "name": "New Zealand Dollar"
+  },
+  {
+    "value": "jpy",
+    "code": "JPY",
+    "symbol": "¥",
+    "name": "Japanese Yen"
+  },
+  {
+    "value": "cny",
+    "code": "CNY",
+    "symbol": "¥",
+    "name": "Chinese Yuan"
+  },
+  {
+    "value": "krw",
+    "code": "KRW",
+    "symbol": "₩",
+    "name": "South Korean Won"
+  },
+  {
+    "value": "aed",
+    "code": "AED",
+    "symbol": "د.إ",
+    "name": "UAE Dirham"
+  },
+  {
+    "value": "sar",
+    "code": "SAR",
+    "symbol": "﷼",
+    "name": "Saudi Riyal"
+  },
+  {
+    "value": "qar",
+    "code": "QAR",
+    "symbol": "﷼",
+    "name": "Qatari Riyal"
+  },
+  {
+    "value": "egp",
+    "code": "EGP",
+    "symbol": "E£",
+    "name": "Egyptian Pound"
+  },
+  {
+    "value": "zar",
+    "code": "ZAR",
+    "symbol": "R",
+    "name": "South African Rand"
+  },
+  {
+    "value": "chf",
+    "code": "CHF",
+    "symbol": "CHF",
+    "name": "Swiss Franc"
+  },
+  {
+    "value": "sek",
+    "code": "SEK",
+    "symbol": "kr",
+    "name": "Swedish Krona"
+  },
+  {
+    "value": "nok",
+    "code": "NOK",
+    "symbol": "kr",
+    "name": "Norwegian Krone"
+  },
+  {
+    "value": "dkk",
+    "code": "DKK",
+    "symbol": "kr",
+    "name": "Danish Krone"
+  },
+  {
+    "value": "sgd",
+    "code": "SGD",
+    "symbol": "S$",
+    "name": "Singapore Dollar"
+  },
+  {
+    "value": "hkd",
+    "code": "HKD",
+    "symbol": "HK$",
+    "name": "Hong Kong Dollar"
+  },
+  {
+    "value": "mxn",
+    "code": "MXN",
+    "symbol": "$",
+    "name": "Mexican Peso"
+  },
+  {
+    "value": "brl",
+    "code": "BRL",
+    "symbol": "R$",
+    "name": "Brazilian Real"
+  },
+  {
+    "value": "try",
+    "code": "TRY",
+    "symbol": "₺",
+    "name": "Turkish Lira"
+  },
+  {
+    "value": "pln",
+    "code": "PLN",
+    "symbol": "zł",
+    "name": "Polish Złoty"
+  },
+  {
+    "value": "czk",
+    "code": "CZK",
+    "symbol": "Kč",
+    "name": "Czech Koruna"
+  },
+  {
+    "value": "huf",
+    "code": "HUF",
+    "symbol": "Ft",
+    "name": "Hungarian Forint"
+  },
+  {
+    "value": "ron",
+    "code": "RON",
+    "symbol": "lei",
+    "name": "Romanian Leu"
+  },
+  {
+    "value": "rub",
+    "code": "RUB",
+    "symbol": "₽",
+    "name": "Russian Ruble"
+  }
+]

@@ -16,7 +16,51 @@ define('PK', $pk);
 // Create table in wordpress database
 
 
+
 function stripe_plugin_create_table()
+{
+    create_settings_table();
+    create_logs_table();
+}
+
+
+function stripe_plugin_delete_table()
+{
+    global $wpdb;
+
+    $table_name = $wpdb->prefix . 'stripe_settings';
+
+    $wpdb->query("DROP TABLE IF EXISTS $table_name");
+    // $wpdb->query($wpdb->prepare("DROP TABLE IF EXISTS $table_name")); // this is also correct, but no need to use prepare() for table deletion
+}
+
+function create_settings_table()
+{
+    global $wpdb;
+
+    require_once(ABSPATH . 'wp-admin/includes/upgrade.php'); // dbDelta() is not loaded automatically it is defined in this file
+
+    $table_name = $wpdb->prefix . "stripe_settings";
+
+    $charset_collate = $wpdb->get_charset_collate();
+
+    $sql = "CREATE TABLE $table_name(
+    id INT NOT NULL AUTO_INCREMENT,
+    pk VARCHAR(100),
+    sk VARCHAR(100),
+    card_or_link BOOLEAN NOT NULL DEFAULT TRUE,
+    secure_link BOOLEAN NOT NULL DEFAULT TRUE,
+    currency_amount_mode VARCHAR(50),
+    amount DECIMAL(10,2),
+    currency VARCHAR(50),
+    PRIMARY KEY (id)
+    ) $charset_collate";
+
+    dbDelta($sql);
+}
+
+
+function create_logs_table()
 {
     global $wpdb;
 
@@ -43,7 +87,6 @@ function stripe_plugin_create_table()
 
     dbDelta($sql);
 }
-
 
 
 function plugin_frontend_scripts()
@@ -83,31 +126,53 @@ function plugin_frontend_scripts()
     );
 }
 
-function plugin_admin_scripts()
+function plugin_admin_scripts($hook)
 {
-    wp_enqueue_script(
-        'logs-script',
-        plugins_url('assets/logs.js', __FILE__),
-        [],
-        null,
-        true
-    );
 
-    wp_localize_script(
-        'logs-script',
-        'logs_data',
-        [
-            'ajax_url' => admin_url('admin-ajax.php')
-        ]
-    );
+    if ($hook == 'toplevel_page_stripe-payment-form') { // toplevel_page_<admin-menu-page-slug> (for main page)
 
-    wp_enqueue_style(
-        'logs-style',
-        plugins_url('assets/logs.css', __FILE__),
-        [],
-        '1.0'
-    );
+        wp_enqueue_script(
+            'settings-script',
+            plugins_url('assets/settings.js', __FILE__),
+            [],
+            null,
+            true
+        );
 
+        wp_localize_Script(
+            'settings-script',
+            'settings_data',
+            [
+                'settings_url' => admin_url('admin-ajax.php')
+            ]
+        );
+    }
+
+
+    if ($hook == 'payment-form_page_payment-logs') { // <admin-menu-page-slug(-first)>_page_<admin-submenu-page-slug> (for submenu page)
+        wp_enqueue_script(
+            'logs-script',
+            plugins_url('assets/logs.js', __FILE__),
+            [],
+            null,
+            true
+        );
+
+        wp_localize_script(
+            'logs-script',
+            'logs_data',
+            [
+                'ajax_url' => admin_url('admin-ajax.php')
+            ]
+        );
+
+        wp_enqueue_style(
+            'logs-style',
+            plugins_url('assets/logs.css', __FILE__),
+            [],
+            '1.0'
+        );
+    }
 }
 
 
@@ -163,6 +228,7 @@ function stripe_plugin_admin_menu()
     );
 }
 
+
 function plugin_dashboard()
 {
     require plugin_dir_path(__FILE__) . 'admin/settings.php';
@@ -171,7 +237,6 @@ function plugin_dashboard()
 function payment_logs()
 {
     require plugin_dir_path(__FILE__) . 'admin/logs.php';
-
 }
 
 function get_payment_logs()
@@ -179,10 +244,18 @@ function get_payment_logs()
     require plugin_dir_path(__FILE__) . 'admin/logs.php';
 }
 
+function payment_settings()
+{
+    require plugin_dir_path(__FILE__) . 'admin/settings.php';
+}
+
 
 register_activation_hook(__FILE__, 'stripe_plugin_create_table');
+register_deactivation_hook(__FILE__, 'stripe_plugin_delete_table');
+register_uninstall_hook(__FILE__, 'stripe_plugin_delete_table');
 add_action('wp_enqueue_scripts', 'plugin_frontend_scripts');  // Loads Scritps on the frontend
 add_action('admin_enqueue_scripts', 'plugin_admin_scripts');  // Loads Scripts on the admin menu
 add_action('admin_menu', 'stripe_plugin_admin_menu'); // add menu pages
 add_action('wp_ajax_get_payment_logs', 'get_payment_logs'); // Registers the get_payment_logs() function to handle the AJAX request with the action name get_payment_logs for logged-in WordPress users.
+add_action('wp_ajax_payment_settings', 'payment_settings');
 add_shortcode('stripe_payment_form', 'stripe_form');
