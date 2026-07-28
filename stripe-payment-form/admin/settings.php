@@ -6,7 +6,7 @@ if (!defined('ABSPATH')) {
 
 $currencies = file_get_contents(plugins_url('../assets/currencies.json', __FILE__));
 
-$config_message_is = true;
+$config_is_setup = true;
 $message = "";
 
 global $wpdb;
@@ -16,9 +16,9 @@ $table_name = $wpdb->prefix . "stripe_settings";
 $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name LIMIT 1"), ARRAY_A);
 
 if ($result !== null) {
-    $config_message_is = false;
+    $config_is_setup = true;
 } else {
-    $config_message_is = true;
+    $config_is_setup = false;
     $message = "<h3 style='color:red;'>Stripe configuration is not set up yet.</h3>";
 }
 
@@ -41,30 +41,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         echo wp_send_json($result);
     } else {
 
-        // $config_data = $wpdb->query($wpdb->prepare("INSERT INTO $table_name (pk, sk, card_or_link, secure_link, currency_amount_mode, amount, currency) VALUES (%s, %s, %d, %d, %s, %d, %s)", $pk, $sk, $card_or_link, $secure_link, $currency_amount_mode, $amount, $currency));
-        $config_data = $wpdb->insert(
-            $table_name,
-            [
-                "pk" => $pk,
-                "sk" => $sk,
-                "card_or_link" => $card_or_link,
-                "secure_link" => $secure_link,
-                "currency_amount_mode" => $currency_amount_mode,
-                "amount" => $amount,
-                "currency" => $currency
-            ],
-            [
-                "%s",
-                "%s",
-                "%d",
-                "%d",
-                "%s",
-                "%d",
-                "%s"
-            ]
-        );
+        $config_data = $wpdb->query($wpdb->prepare("INSERT INTO $table_name (pk, sk, card_or_link, secure_link, currency_amount_mode, amount, currency) VALUES (%s, %s, %d, %d, %s, %f, %s)", $pk, $sk, $card_or_link, $secure_link, $currency_amount_mode, $amount, $currency));
 
-        echo wp_send_json($config_data);
+
+        if ($config_data === false) {
+
+            echo wp_send_json([
+                "message" => $wpdb->last_error,
+                "query" => $wpdb->last_query
+            ]);
+        } else {
+            // $result = $wpdb->get_results($wpdb->prepare("SELECT * FROM $table_name LIMIT 1"), ARRAY_A); // returns array
+            $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name LIMIT 1"), ARRAY_A);
+            echo wp_send_json($result);
+        }
+
     }
 
     exit;
@@ -77,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <div id="settings">
     <h1>Dashboard Page</h1>
 
-    <?= $config_message_is ? $message : "" ?>
+    <?= $config_is_setup ? "" : $message ?>
 
     <div class="stripe-config">
         <label>Enter Publishable Key</label>
@@ -128,7 +119,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <textarea name="redirect-page" rows="15" cols="100" placeholder="Paste your code here..."></textarea>
     </div>
 
-    <button id="save-update-code">Save</button>
+    <button id="save-update-code"><?= $config_is_setup ? "Update" : "Save" ?></button>
 
 </div>
 
