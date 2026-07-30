@@ -58,6 +58,6 @@ $currencies = file_get_contents(plugins_url('../assets/currencies.json', __FILE_
 <script>
     let currencies = <?= $currencies ?>
 
-    let document.getElementById("currency")
+    // let document.getElementById("currency")
 
 </script>

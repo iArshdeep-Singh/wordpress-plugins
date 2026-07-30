@@ -46,13 +46,10 @@ function create_settings_table()
 
     $sql = "CREATE TABLE $table_name(
     id INT NOT NULL AUTO_INCREMENT,
-    pk VARCHAR(100),
-    sk VARCHAR(100),
+    pk VARCHAR(200),
+    sk VARCHAR(200),
     card_or_link BOOLEAN NOT NULL DEFAULT TRUE,
     secure_link BOOLEAN NOT NULL DEFAULT TRUE,
-    currency_amount_mode VARCHAR(50),
-    amount DECIMAL(10,2),
-    currency VARCHAR(50),
     PRIMARY KEY (id)
     ) $charset_collate";
 
@@ -112,7 +109,7 @@ function plugin_frontend_scripts()
         'my-script',
         'stripe_data',
         [
-            'endpoint' => plugins_url('endpoint.php', __FILE__),
+            'endpoint' => admin_url('admin-ajax.php'),
             'save_payment' => plugins_url('save_payment.php', __FILE__),
             'pk' => PK
         ]
@@ -150,10 +147,13 @@ function plugin_admin_scripts($hook)
 
 
     if ($hook == 'payment-form_page_payment-logs') { // <admin-menu-page-slug(-first)>_page_<admin-submenu-page-slug> (for submenu page)
+
+        wp_enqueue_script('jquery');
+
         wp_enqueue_script(
             'logs-script',
             plugins_url('assets/logs.js', __FILE__),
-            [],
+            ['jquery'],
             null,
             true
         );
@@ -224,7 +224,6 @@ function stripe_plugin_admin_menu()
         'manage_options',
         'payment-logs',             // Menu slug
         'payment_logs'              // Callback function 
-
     );
 }
 
@@ -249,6 +248,11 @@ function payment_settings()
     require plugin_dir_path(__FILE__) . 'admin/settings.php';
 }
 
+function endpoint()
+{
+    require plugin_dir_path(__FILE__) . '/endpoint.php';
+}
+
 
 register_activation_hook(__FILE__, 'stripe_plugin_create_table');
 register_deactivation_hook(__FILE__, 'stripe_plugin_delete_table');
@@ -258,4 +262,6 @@ add_action('admin_enqueue_scripts', 'plugin_admin_scripts');  // Loads Scripts o
 add_action('admin_menu', 'stripe_plugin_admin_menu'); // add menu pages
 add_action('wp_ajax_get_payment_logs', 'get_payment_logs'); // Registers the get_payment_logs() function to handle the AJAX request with the action name get_payment_logs for logged-in WordPress users.
 add_action('wp_ajax_payment_settings', 'payment_settings');
+add_action('wp_ajax_endpoint', 'endpoint');
+add_action('wp_ajax_nopriv_endpoint', 'endpoint'); // wp_ajax_nopriv_ means 'no privileges', is a WordPress AJAX hook for users who are NOT logged in.
 add_shortcode('stripe_payment_form', 'stripe_form');

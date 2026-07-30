@@ -30,7 +30,7 @@
         const currency = currency_select.value;
         const symbol = currency_select.options[currency_select.selectedIndex].dataset.symbol
 
-        await fetch(stripe_data.endpoint, {
+        await fetch(stripe_data.endpoint + "?action=endpoint", {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -96,7 +96,7 @@
             }
 
 
-            const response = await fetch(stripe_data.endpoint, {
+            const response = await fetch(stripe_data.endpoint + "?action=endpoint", {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json"

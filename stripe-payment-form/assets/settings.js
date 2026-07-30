@@ -11,23 +11,10 @@
     let currency = document.querySelector('.stripe-config select[name="currency"]')
     let card_or_link = document.querySelector('.stripe-config select[name="card-or-link"]')
     let secure_link = document.querySelector('.stripe-config select[name="secure-link"]')
-    let currency_amount_mode = document.querySelector('.stripe-config select[name="currency-amount-mode"]')
+
 
 
     document.addEventListener('DOMContentLoaded', () => {
-
-        let currencies_select = currency
-
-        currencies.forEach(currency => {
-            let opt = document.createElement('option')
-
-            opt.textContent = currency.code
-            opt.value = currency.value
-            opt.setAttribute("data-symbol", currency.symbol)
-            opt.selected = currency.value == "usd" ? true : false
-
-            currencies_select.appendChild(opt)
-        })
 
     })
 
@@ -46,22 +33,6 @@
                         break
                     case "secure-link":
                         data.secure_link = this.value
-                        break
-                    case "currency-amount-mode":
-                        data.currency_amount_mode = this.value
-                        if (this.value === "fixed") {
-                            document.querySelector('.stripe-config[style="display: none;"]').style.display = "block"
-                        } else {
-
-                            if (document.querySelector('.stripe-config[style="display: block;"]')) {
-                                data.amount = null
-                                data.currency = null
-                                document.querySelector('.stripe-config[style="display: block;"]').style.display = "none"
-                            } else {
-                                data.amount = null
-                                data.currency = null
-                            }
-                        }
                         break
                     default:
                         console.log("Default")
@@ -142,17 +113,6 @@
                             break
                         }
                         break
-                    case "amount":
-                        if (Number(input_tags.value) < 0 || isNaN(Number(input_tags.value))) {
-                            create_error_message(element, "Invalid Amount.")
-                            is_validate = false
-                            break
-                        }
-                        if (Number(input_tags.value) == 0) {
-                            create_error_message(element, "Please this field.")
-                            is_validate = false
-                        }
-                        break
                     default:
                         console.log("Default")
                 }
@@ -186,11 +146,8 @@
 
         data.pk = pk.value
         data.sk = sk.value
-        data.amount = Number(amount.value)
-        data.currency = currency.value
-        data.card_or_link = card_or_link.value
-        data.secure_link = secure_link.value
-        data.currency_amount_mode = currency_amount_mode.value
+        data.card_or_link = card_or_link.value == "true" ? 1 : 0
+        data.secure_link = secure_link.value == "true" ? 1 : 0
 
         let response = await fetch(settings_data.settings_url + "?action=payment_settings", {
             headers: { "content-type": "application/json" },
