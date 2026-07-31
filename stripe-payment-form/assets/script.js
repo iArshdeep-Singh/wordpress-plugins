@@ -1,7 +1,8 @@
 (async () => {
 
-    const stripe = Stripe(stripe_data.pk)
 
+    const stripe = Stripe(stripe_data.pk)
+    let stripe_object = stripe_data.secure_link == "1" ? { layout: "tabs" } : { layout: "tabs", wallets: { link: "never" } }
 
     let elements
     let paymentElement
@@ -59,7 +60,9 @@
                                   <span class="cents">${cents}</span>`
 
             elements = stripe.elements({ clientSecret: data.client_secret })
-            paymentElement = elements.create("payment", { layout: "tabs", wallets: { link: "never" } })
+
+
+            paymentElement = elements.create("payment", stripe_object)
 
             paymentElement.mount("#payment-element")
 
@@ -129,7 +132,7 @@
 
             elements = stripe.elements({ clientSecret: data.client_secret })
 
-            paymentElement = elements.create("payment", { layout: "tabs" })
+            paymentElement = elements.create("payment", stripe_object)
 
 
             // console.log(paymentElement)
@@ -150,7 +153,7 @@
     // pay button
     pay_button.addEventListener('click', async function () {
         pay_button.disabled = true
-        const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required", confirmParams: { return_url: stripe_data.save_payment } })
+        const { error, paymentIntent } = await stripe.confirmPayment({ elements, redirect: "if_required", confirmParams: { return_url: stripe_data.save_payment + "?action=save_payment" } })
 
         if (error) {
             pay_button.disabled = false
@@ -160,13 +163,18 @@
 
                 console.log(paymentIntent)
 
-                await fetch(stripe_data.save_payment, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({ payment_intent: paymentIntent?.id })
-                }).then(async (response) => await response.json()).then(data => console.log(data))
+                window.location.href = stripe_data.save_payment + `?action=redirect&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}&=redirect_status${paymentIntent.status}`
+
+                // await fetch(stripe_data.save_payment + "?action=save_payment", {
+                //     method: "POST",
+                //     headers: {
+                //         "Content-Type": "application/json"
+                //     },
+                //     body: JSON.stringify({ payment_intent: paymentIntent?.id })
+                // }).then(async (response) => await response.json()).then(data => {
+
+
+                // })
 
 
                 paymentElement.unmount()

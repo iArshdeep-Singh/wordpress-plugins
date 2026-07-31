@@ -1,6 +1,6 @@
 <?php
 
-require dirname(__DIR__, 3) . '/wp-load.php';
+// require dirname(__DIR__, 3) . '/wp-load.php';
 
 
 $env = parse_ini_file(__DIR__ . '/.env');
@@ -15,6 +15,8 @@ if (isset($data["payment_intent"]) && !empty($data["payment_intent"])) {
     $response = stripe_payment_intent_and_charges($sk, $id);
 
     echo json_encode($response);
+    header("Location: " . admin_url('admin-ajax.php') . "?action=redirect&payment_intent=" . $id . "&payment_intent_client_secret=" . $data['payment_intent_client_secret'] . "&redirect_status=" . $data['redirect_status']);
+    exit;
 
 } else if (isset($_GET["payment_intent"])) {
 
@@ -23,6 +25,8 @@ if (isset($data["payment_intent"]) && !empty($data["payment_intent"])) {
     $response = stripe_payment_intent_and_charges($sk, $id);
 
     echo json_encode($response);
+    header("Location: " . admin_url('admin-ajax.php') . "?action=redirect&payment_intent=" . $id . "&payment_intent_client_secret=" . $data['payment_intent_client_secret'] . "&redirect_status=" . $data['redirect_status']);
+    exit;
     // echo "<script>history.go(-2)</script>"; // redirect
 }
 

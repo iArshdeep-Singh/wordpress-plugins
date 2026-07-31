@@ -30,17 +30,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sk = $data['sk'] ?? "";
     $card_or_link = $data['card_or_link'];
     $secure_link = $data['secure_link'];
+    $redirect_code = $data['redirect_code'];
+
+    // if ($redirect_code !== "") {
+    file_put_contents(plugin_dir_path(__FILE__) . "../redirect.php", $redirect_code);
+    // }
+
 
     $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name LIMIT 1"), ARRAY_A);
 
     if ($row !== null) {
 
-        $result = $wpdb->update($table_name, ["pk" => $pk, "sk" => $sk, "card_or_link" => $card_or_link, "secure_link" => $secure_link], ["id" => $row['id']], ['%s', '%s', '%d', '%d'], ['%d']);
+        $result = $wpdb->update($table_name, ["pk" => $pk, "sk" => $sk, "card_or_link" => $card_or_link, "secure_link" => $secure_link, "redirect_code" => $redirect_code], ["id" => $row['id']], ['%s', '%s', '%d', '%d', '%s'], ['%d']);
 
-        echo wp_send_json([$result, ["updated" => "yes"], ["message" => $wpdb->last_error]]);
+        echo wp_send_json([$result, ["message" => $wpdb->last_error]]);
     } else {
 
-        $config_data = $wpdb->query($wpdb->prepare("INSERT INTO $table_name (pk, sk, card_or_link, secure_link) VALUES (%s, %s, %d, %d)", $pk, $sk, $card_or_link, $secure_link));
+        $config_data = $wpdb->query($wpdb->prepare("INSERT INTO $table_name (pk, sk, card_or_link, secure_link, redirect_code) VALUES (%s, %s, %d, %d, %s)", $pk, $sk, $card_or_link, $secure_link, $redirect_code));
 
         if ($config_data === false) {
 
@@ -82,8 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             links
             and third-party integrations?</label>
         <select name="card-or-link">
-            <option value="true" <?= isset($result['card_or_link']) ? "selected" : "" ?>>Yes</option>
-            <option value="false" <?= isset($result['card_or_link']) ? "selected" : "" ?>>No (Only Card Payments)
+            <option value="true" <?= isset($result['card_or_link']) && $result['card_or_link'] == "1" ? "selected" : "" ?>>
+                Yes
+            </option>
+            <option value="false" <?= isset($result['card_or_link']) && $result['card_or_link'] == "0" ? "selected" : "" ?>>No (Only Card Payments)
             </option>
         </select>
 
@@ -92,18 +100,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="stripe-config">
         <label>Enable Stripe Secure Payment Link</label>
         <select name="secure-link">
-            <option value="true" <?= isset($result['secure_link']) ? "selected" : "" ?>>Yes</option>
-            <option value="false" <?= isset($result['secure_link']) ? "selected" : "" ?>>No</option>
+            <option value="true" <?= isset($result['secure_link']) && $result['secure_link'] == "1" ? "selected" : "" ?>>
+                Yes
+            </option>
+            <option value="false" <?= isset($result['secure_link']) && $result['secure_link'] == "0" ? "selected" : "" ?>>
+                No</option>
         </select>
     </div>
 
     <div class="stripe-config">
         <label>Redirect Page Code (PHP)</label>
-        <textarea name="redirect-page" rows="15" cols="100" placeholder="Paste your code here..."></textarea>
+        <textarea name="redirect-page" rows="15" cols="100" placeholder="Paste your code here..."
+            value=<?= $result["redirect_code"] ?>></textarea>
     </div>
 
     <button id="save-update-code"><?= $config_is_setup ? "Update" : "Save" ?></button>
 
+    <p></p>
 </div>
 
 <script>

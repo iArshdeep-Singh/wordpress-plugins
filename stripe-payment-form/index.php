@@ -11,9 +11,19 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$pk = parse_ini_file(__DIR__ . '/.env')['PK'];
-define('PK', $pk);
+// $pk = parse_ini_file(__DIR__ . '/.env')['PK'];
+// define('PK', $pk);
 // Create table in wordpress database
+global $wpdb;
+
+
+function initial_setup()
+{
+    $content = "<?php\n\necho \"Hello, world\";\n\n?>";
+
+    file_put_contents('redirect.php', $content);
+
+}
 
 
 
@@ -50,6 +60,7 @@ function create_settings_table()
     sk VARCHAR(200),
     card_or_link BOOLEAN NOT NULL DEFAULT TRUE,
     secure_link BOOLEAN NOT NULL DEFAULT TRUE,
+    redirect_code TEXT,
     PRIMARY KEY (id)
     ) $charset_collate";
 
@@ -85,6 +96,27 @@ function create_logs_table()
     dbDelta($sql);
 }
 
+$pk = '';
+$secure_link = '';
+
+$table_name = $wpdb->prefix . 'stripe_settings';
+
+$table_exists = $wpdb->get_var($wpdb->prepare("SHOW TABLES LIKE %s", $table_name));
+
+if ($table_exists === $table_name) {
+    $result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name LIMIT 1", []), ARRAY_A);
+
+    if ($result !== null) {
+        $pk = $result['pk'];
+        $secure_link = $result['secure_link'];
+    }
+}
+
+
+
+define('PK', $pk);
+define('SECURE_LINK', $secure_link);
+
 
 function plugin_frontend_scripts()
 {
@@ -110,8 +142,9 @@ function plugin_frontend_scripts()
         'stripe_data',
         [
             'endpoint' => admin_url('admin-ajax.php'),
-            'save_payment' => plugins_url('save_payment.php', __FILE__),
-            'pk' => PK
+            'save_payment' => admin_url('admin-ajax.php'),
+            'pk' => PK,
+            'secure_link' => SECURE_LINK
         ]
     );
 
@@ -253,6 +286,16 @@ function endpoint()
     require plugin_dir_path(__FILE__) . '/endpoint.php';
 }
 
+function save_payment()
+{
+    require plugin_dir_path(__FILE__) . '/save_payment.php';
+}
+
+function redirect()
+{
+    require plugin_dir_path(__FILE__) . '/redirect.php';
+}
+
 
 register_activation_hook(__FILE__, 'stripe_plugin_create_table');
 register_deactivation_hook(__FILE__, 'stripe_plugin_delete_table');
@@ -264,4 +307,9 @@ add_action('wp_ajax_get_payment_logs', 'get_payment_logs'); // Registers the get
 add_action('wp_ajax_payment_settings', 'payment_settings');
 add_action('wp_ajax_endpoint', 'endpoint');
 add_action('wp_ajax_nopriv_endpoint', 'endpoint'); // wp_ajax_nopriv_ means 'no privileges', is a WordPress AJAX hook for users who are NOT logged in.
+add_action('wp_ajax_nopriv_save_payment', 'save_payment');
+add_action('wp_ajax_save_payment', 'save_payment');
+add_action('wp_ajax_nopriv_redirect', 'redirect');
+add_action('wp_ajax_redirect', 'redirect');
 add_shortcode('stripe_payment_form', 'stripe_form');
+add_action('init', 'initial_setup');

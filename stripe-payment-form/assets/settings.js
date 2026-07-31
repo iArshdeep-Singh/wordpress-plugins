@@ -11,6 +11,7 @@
     let currency = document.querySelector('.stripe-config select[name="currency"]')
     let card_or_link = document.querySelector('.stripe-config select[name="card-or-link"]')
     let secure_link = document.querySelector('.stripe-config select[name="secure-link"]')
+    let redirect_code = document.querySelector('.stripe-config textarea')
 
 
 
@@ -136,11 +137,20 @@
     }
 
 
-    document.getElementById('save-update-code').addEventListener('click', async () => {
+    document.getElementById('save-update-code').addEventListener('click', async (e) => {
+
+        let database_error = document.querySelector("#settings p")
+
+        database_error.innerText = ""
 
         let is_validate = input_validation()
 
+        e.target.disabled = true
+        e.target.innerText = e.target.innerText.replace("e", "") + "ing";
+
         if (!is_validate) {
+            e.target.innerText = e.target.innerText.replace("ing", "") + "e";
+            e.target.disabled = false
             return
         }
 
@@ -148,6 +158,7 @@
         data.sk = sk.value
         data.card_or_link = card_or_link.value == "true" ? 1 : 0
         data.secure_link = secure_link.value == "true" ? 1 : 0
+        data.redirect_code = redirect_code.value
 
         let response = await fetch(settings_data.settings_url + "?action=payment_settings", {
             headers: { "content-type": "application/json" },
@@ -155,9 +166,22 @@
             body: JSON.stringify(data)
         })
 
+        e.target.innerText = e.target.innerText.replace("ing", "") + "e";
+        e.target.disabled = false
+
         let parsed_data = await response.json()
 
-        console.log(parsed_data)
+        if (parsed_data[0] == 0) {
+            database_error.innerText = parsed_data[1].message
+            database_error.style.color = "red";
+        }
+
+        if (document.querySelector('#settings h3')) {
+            document.querySelector('#settings h3').innerText = ""
+        }
+
+        console.log(parsed_data[0])
+        console.log(data)
     })
 
 })()

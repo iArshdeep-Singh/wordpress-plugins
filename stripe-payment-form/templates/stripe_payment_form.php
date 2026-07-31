@@ -4,6 +4,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 $currencies = file_get_contents(plugins_url('../assets/currencies.json', __FILE__));
+
+
 ?>
 
 <div class="stripe-payment-wrap" style="display: none">
@@ -58,6 +60,5 @@ $currencies = file_get_contents(plugins_url('../assets/currencies.json', __FILE_
 <script>
     let currencies = <?= $currencies ?>
 
-    // let document.getElementById("currency")
 
 </script>

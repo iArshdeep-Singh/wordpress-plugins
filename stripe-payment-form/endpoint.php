@@ -26,14 +26,11 @@ $url = "https://api.stripe.com/v1/payment_intents";
 $body = [
     'amount' => $amount,
     'currency' => $currency,
-    'automatic_payment_methods[enabled]' => 'true',
-    // 'payment_method_types' => ['card'] // show only card
-    // // 'receipt_email' => "iarshdeephans@gmail.com"// show only card
-    "excluded_payment_method_types" => [
-        "cashapp"
-    ]
+    'automatic_payment_methods[enabled]' => $stripe_config_data['card_or_link'] == "1" ? "true" : 'false'
 ];
 
+
+$body = $stripe_config_data['card_or_link'] == "0" ? [...$body, ...['payment_method_types' => ['card']]] : $body;
 
 
 $response = wp_remote_post($url, [
