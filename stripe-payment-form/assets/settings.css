@@ -1,0 +1,305 @@
+/* ==========================================================================
+   Stripe Settings Dashboard
+   Scoped entirely under #settings so it won't leak into the rest of wp-admin.
+   ========================================================================== */
+
+#settings {
+  --ink: #1a1d29;
+  --ink-soft: #6b7280;
+  --line: #e3e6ec;
+  --surface: #ffffff;
+  --canvas: #f7f8fb;
+  --accent: #4f46e5;
+  --accent-dark: #3f37c9;
+  --accent-soft: #eef0fd;
+  --ok: #16a34a;
+  --ok-soft: #e9f8ee;
+  --code-bg: #11151c;
+  --code-text: #d7e0ff;
+  --code-key: #8fd7a4;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 18, 30, 0.04), 0 6px 20px rgba(16, 18, 30, 0.06);
+
+  max-width: 1000px;
+  margin: 32px 0;
+  padding: 0 20px 60px;
+  color: var(--ink);
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#settings h1 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px;
+  color: var(--ink);
+}
+
+/* Setup / status message injected via <?= $message ?> */
+#settings > p,
+#settings > div:not(.stripe-config):not(#shortcode) {
+  background: var(--ok-soft);
+  border: 1px solid #bfe8cc;
+  color: #146c2e;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 13px;
+  margin: 12px 0 24px;
+}
+
+/* ---- Config cards ---- */
+.stripe-config {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px 20px;
+  margin-bottom: 14px;
+}
+
+.stripe-config label {
+  display: block;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.stripe-config input[type="text"],
+.stripe-config select {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--canvas);
+  color: var(--ink);
+  font-size: 14px;
+  font-family: inherit;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.stripe-config input[type="text"]::placeholder {
+  color: #a2a8b6;
+}
+
+.stripe-config input[type="text"]:focus,
+.stripe-config select:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.stripe-config select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--ink-soft) 50%),
+    linear-gradient(135deg, var(--ink-soft) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) center,
+    calc(100% - 13px) center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  padding-right: 32px;
+}
+
+/* Publishable / secret key inputs read as credentials -> monospace */
+.stripe-config input[name="pk"],
+.stripe-config input[name="sk"] {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+/* ---- Redirect code editor ---- */
+.stripe-config code {
+  display: block;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+.stripe-config code textarea[name="redirect-page"] {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+  background: var(--code-bg);
+  color: var(--code-text);
+  border: 1px solid #262c3a;
+  border-radius: 8px;
+  padding: 16px 18px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  tab-size: 4;
+}
+
+.stripe-config code textarea[name="redirect-page"]::placeholder {
+  color: #5b6478;
+}
+
+.stripe-config code textarea[name="redirect-page"]:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.25);
+}
+
+/* Little "PHP" tag pinned to the code block's label */
+.stripe-config label[for=""],
+.stripe-config:has(textarea[name="redirect-page"]) label {
+  position: relative;
+  padding-right: 46px;
+}
+
+.stripe-config:has(textarea[name="redirect-page"]) label::after {
+  content: "PHP";
+  position: absolute;
+  right: 0;
+  top: -1px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--accent-dark);
+  background: var(--accent-soft);
+  border-radius: 999px;
+  padding: 3px 8px;
+}
+
+/* ---- Save / Update button ---- */
+#save-update-code {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 11px 22px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow:
+    0 1px 2px rgba(79, 70, 229, 0.25),
+    0 4px 12px rgba(79, 70, 229, 0.2);
+  transition:
+    background 0.15s ease,
+    transform 0.05s ease;
+}
+
+#save-update-code:hover {
+  background: var(--accent-dark);
+}
+
+#save-update-code:active {
+  transform: translateY(1px);
+}
+
+#save-update-code:focus-visible {
+  outline: 2px solid var(--accent-dark);
+  outline-offset: 2px;
+}
+
+/* ---- Shortcode reference panel ---- */
+#shortcode {
+  margin-top: 28px;
+  background: var(--canvas);
+  border: 1px dashed var(--line);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+}
+
+#shortcode > p {
+  margin: 0 0 10px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+#shortcode ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--ink-soft);
+}
+
+#shortcode li {
+  margin-bottom: 8px;
+}
+
+#shortcode li code {
+  background: var(--accent-soft);
+  color: var(--accent-dark);
+  border-radius: 4px;
+  padding: 1px 6px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12.5px;
+}
+
+/* The copyable shortcode row */
+#shortcode > code {
+  display: inline-flex;
+  align-items: center;
+  background: var(--code-bg);
+  color: var(--code-key);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+#shortcode button {
+  vertical-align: middle;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  color: var(--ink);
+  border-radius: 8px;
+  padding: 9px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    border-color 0.15s ease;
+}
+
+#shortcode button:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-dark);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 600px) {
+  #settings {
+    margin: 16px auto;
+    padding: 0 14px 40px;
+  }
+
+  .stripe-config {
+    padding: 14px 16px;
+  }
+
+  #shortcode > code {
+    display: block;
+    margin: 0 0 10px;
+  }
+}
+
+/* ---- Reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  #settings * {
+    transition: none !important;
+  }
+}

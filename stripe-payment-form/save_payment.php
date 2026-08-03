@@ -1,10 +1,12 @@
 <?php
 
 // require dirname(__DIR__, 3) . '/wp-load.php';
+global $wpdb;
+$table_name = $wpdb->prefix . "stripe_settings";
+$result = $wpdb->get_row($wpdb->prepare("SELECT * FROM $table_name LIMIT 1", []), ARRAY_A);
 
+$sk = $result['sk'];
 
-$env = parse_ini_file(__DIR__ . '/.env');
-$sk = $env['SK'];
 
 $data = json_decode(file_get_contents("php://input"), true);
 
@@ -15,7 +17,7 @@ if (isset($data["payment_intent"]) && !empty($data["payment_intent"])) {
     $response = stripe_payment_intent_and_charges($sk, $id);
 
     echo json_encode($response);
-    header("Location: " . admin_url('admin-ajax.php') . "?action=redirect&payment_intent=" . $id . "&payment_intent_client_secret=" . $data['payment_intent_client_secret'] . "&redirect_status=" . $data['redirect_status']);
+    // header("Location: " . admin_url('admin-ajax.php') . "?action=redirect&payment_intent=" . $id . "&payment_intent_client_secret=" . $data['payment_intent_client_secret'] . "&redirect_status=" . $data['redirect_status']);
     exit;
 
 } else if (isset($_GET["payment_intent"])) {
@@ -36,28 +38,22 @@ function stripe_payment_intent_and_charges($sk, $id)
 
     $url = "https://api.stripe.com/v1/payment_intents/{$id}";
 
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, [
-        "Content-Type: application/x-www-form-urlencoded",
-        "Authorization: Bearer " . $sk
+    $response = wp_remote_request($url, [
+        "method" => "GET",
+        "headers" => [
+            "content-type" => "application/json",
+            "Authorization" => "Bearer " . $sk
+        ]
     ]);
-    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
 
-    $response = curl_exec($ch);
 
-    $decoded_data = json_decode($response, true);
+    $data = wp_remote_retrieve_body($response);
+    $decoded_data = json_decode($data, true);
+
     $latest_charge = $decoded_data['latest_charge'];
 
-    if (!isset($decoded_data['latest_charge'])) {
-        file_put_contents("stripe.json", $response);
-        exit;
-    }
-
-    if (curl_errno($ch)) {
-        file_put_contents("stripe.json", $response);
+    if (is_wp_error($response)) {
+        file_put_contents("stripe.json", $response->get_error_message());
     } else {
 
         $curl = curl_init();

@@ -11,9 +11,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-// $pk = parse_ini_file(__DIR__ . '/.env')['PK'];
-// define('PK', $pk);
-// Create table in wordpress database
 global $wpdb;
 
 
@@ -160,6 +157,13 @@ function plugin_admin_scripts($hook)
 {
 
     if ($hook == 'toplevel_page_stripe-payment-form') { // toplevel_page_<admin-menu-page-slug> (for main page)
+
+        wp_enqueue_style(
+            'settings-style',
+            plugins_url("assets/settings.css", __FILE__),
+            [],
+            null
+        );
 
         wp_enqueue_script(
             'settings-script',

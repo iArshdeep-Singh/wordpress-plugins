@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <div id="settings">
-    <h1>Dashboard Page</h1>
+    <h1>Settings Page</h1>
 
     <?= $config_is_setup ? "" : $message ?>
 
@@ -110,17 +110,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <div class="stripe-config">
         <label>Redirect Page Code (PHP)</label>
-        <textarea name="redirect-page" rows="15" cols="100" placeholder="Paste your code here..."
-            value=<?= $result["redirect_code"] ?>></textarea>
+        <code><textarea name="redirect-page" rows="15" cols="100"
+            placeholder="Paste your code here..."><?= $result['redirect_code'] ?? '' ?></textarea></code>
     </div>
 
     <button id="save-update-code"><?= $config_is_setup ? "Update" : "Save" ?></button>
 
-    <p></p>
+    <div id="shortcode">
+        <p>You can use the shortcode according to the following rules:</p>
+        <ul>
+            <li>If you use the shortcode as <code>[stripe_payment_form]</code>, users can enter a custom amount and
+                select their preferred currency.</li>
+            <li>If you use the shortcode as <code>[stripe_payment_form currency="eur" amount="50"]</code>, the payment
+                form is displayed directly with EUR as the currency and 50 as the payment amount.</li>
+            <li>If you use the shortcode as <code>[stripe_payment_form amount="50"]</code> without specifying a
+                currency, the payment
+                form is displayed with the amount set to 50, and the default currency will be USD.</li>
+        </ul>
+
+        <code>[stripe_payment_form currency="" amount=""]</code>
+        <button onclick="copy(this)">copy</button>
+    </div>
 </div>
 
 <script>
 
     console.log(<?= json_encode($result) ?>, "result")
+
+
+    function copy(button) {
+        let text = document.querySelectorAll('#shortcode code')[3].innerText
+        navigator.clipboard.writeText(text)
+
+        button.innerText = "copied!"
+
+        setTimeout(() => {
+
+            button.innerText = "copy"
+
+        }, 2000) // 1000ms (1 second)
+    }
 
 </script>

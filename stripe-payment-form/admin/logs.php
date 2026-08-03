@@ -3,6 +3,18 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] == 'DELETE') {
+
+    global $wpdb;
+    $table = $wpdb->prefix . "stripe_payment_logs";
+
+    $wpdb->query($wpdb->prepare("DELETE FROM $table"));
+
+    wp_send_json(["method" => "Delete"]);
+
+    exit;
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
@@ -69,6 +81,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // echo json_encode($response, JSON_PRETTY_PRINT);
     exit;
 }
+
 ?>
 <div id="logs-wrap">
     <h1>Logs</h1>
@@ -96,6 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <option value="ASC" selected>Ascending</option>
             <option value="DESC">Descending</option>
         </select>
+        <button id="delete-all" style="color: white; background-color: red; border: 2px solid black;">Delete
+            All</button>
         <table id="payment-logs"></table>
     </div>
 </div>

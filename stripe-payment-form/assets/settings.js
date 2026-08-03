@@ -93,7 +93,7 @@
                     case "pk":
                         if (!/^(pk_)/.test(input_tags.value)) {
                             if (input_tags.value == "") {
-                                create_error_message(element, "Please this field.")
+                                create_error_message(element, "Please fill this field.")
                                 is_validate = false
                             } else {
                                 create_error_message(element, "Invalid match.")

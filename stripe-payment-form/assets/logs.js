@@ -231,4 +231,15 @@
         return data
     }
 
+
+    document.getElementById("delete-all").addEventListener("click", async () => {
+        const response = await fetch(logs_data.ajax_url + "?action=get_payment_logs", {
+            headers: { "content-type": "application/json" },
+            method: 'DELETE'
+        })
+
+        table.innerHTML = ""
+
+    })
+
 })()

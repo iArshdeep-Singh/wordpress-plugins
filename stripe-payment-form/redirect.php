@@ -1,4 +1,2 @@
 <?php
-echo "Hello, world";
-
-exit;
+echo "Hello, Universe!";

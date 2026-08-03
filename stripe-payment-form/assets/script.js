@@ -163,18 +163,16 @@
 
                 console.log(paymentIntent)
 
-                window.location.href = stripe_data.save_payment + `?action=redirect&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}&=redirect_status${paymentIntent.status}`
-
-                // await fetch(stripe_data.save_payment + "?action=save_payment", {
-                //     method: "POST",
-                //     headers: {
-                //         "Content-Type": "application/json"
-                //     },
-                //     body: JSON.stringify({ payment_intent: paymentIntent?.id })
-                // }).then(async (response) => await response.json()).then(data => {
-
-
-                // })
+                await fetch(stripe_data.save_payment + "?action=save_payment", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ payment_intent: paymentIntent?.id })
+                }).then(async (response) => await response.json()).then(data => {
+                    console.log(data)
+                    window.location.href = stripe_data.save_payment + `?action=redirect&payment_intent=${paymentIntent.id}&payment_intent_client_secret=${paymentIntent.client_secret}&=redirect_status${paymentIntent.status}`
+                })
 
 
                 paymentElement.unmount()
