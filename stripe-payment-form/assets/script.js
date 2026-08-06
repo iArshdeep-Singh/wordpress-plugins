@@ -52,7 +52,7 @@
             currency_select.style.display = "none"
             cancel_button.style.display = "none"
 
-            document.querySelector(".stripe-payment-wrap").style.display = "block"
+            document.querySelector(".stripe-payment-wrap").style.display = "inline-block"
             document.querySelector(".stripe-payment-wrap label").style.display = "none"
 
             submitted_amount.innerHTML = `<span class="symbol">${symbol}</span>
@@ -73,7 +73,7 @@
 
     } else {
 
-        document.querySelector(".stripe-payment-wrap").querySelector("label").style.display = "block"
+        document.querySelector(".stripe-payment-wrap").querySelector("label").style.display = "inline-block"
         document.querySelector(".stripe-payment-wrap").style.display = "block"
 
         proceed_button.addEventListener('click', async function () {
@@ -205,7 +205,7 @@
         proceed_button.style.display = "block"
         proceed_button.disabled = false
         currency_select.style.display = "block"
-        document.querySelector(".stripe-payment-wrap").querySelector("label").style.display = "block"
+        document.querySelector(".stripe-payment-wrap").querySelector("label").style.display = "inline-block"
         submitted_amount.innerHTML = ""
         error_message.innerHTML = ""
         success_message.innerHTML = ""
